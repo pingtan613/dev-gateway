@@ -1,0 +1,53 @@
+name: Layer7 Policy Plugin CI/CD/CT
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# This job runs for Gateways directly and or via Portal
+jobs:
+  BuildDeployTest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build and Publish TEST
+        uses: Gazza7205/policy-plugin-action@v1
+        with:
+          environment: test
+          url: "https://gateway-test.brcmlabs.com:9443/"
+          type: "direct"
+          username: ${{ secrets.GATEWAY_TEST_USERNAME }}
+          password: ${{ secrets.GATEWAY_TEST_PASSWORD }}
+          ct_api_id: ${{ secrets.BLAZE_CT_APIID }}
+          ct_api_secret: ${{ secrets.BLAZE_CT_API_SECRET }}
+          ct_test_id: "8991755"
+      - name: Build and Publish UAT
+        uses: Gazza7205/policy-plugin-action@v1
+        with:
+          environment: uat
+          url: "https://gateway-uat.brcmlabs.com:9443/"
+          type: "direct"
+          username: ${{ secrets.GATEWAY_UAT_USERNAME }}
+          password: ${{ secrets.GATEWAY_UAT_PASSWORD }}
+          ct_api_id: ${{ secrets.BLAZE_CT_APIID }}
+          ct_api_secret: ${{ secrets.BLAZE_CT_API_SECRET }}
+          ct_test_id: "8989412"
+      - name: Build and Publish PRODUCTION
+        uses: Gazza7205/policy-plugin-action@v1
+        with:
+          environment: production
+          url: "https://gateway-production.brcmlabs.com:9443/"
+          type: "direct"
+          username: ${{ secrets.GATEWAY_PRODUCTION_USERNAME }}
+          password: ${{ secrets.GATEWAY_PRODUCTION_PASSWORD }}
+          ct_api_id: ${{ secrets.BLAZE_CT_APIID }}
+          ct_api_secret: ${{ secrets.BLAZE_CT_API_SECRET }}
+          ct_test_id: "8991758"

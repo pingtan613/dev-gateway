@@ -1,0 +1,21 @@
+#releases:
+#  projects:
+#    module1:
+#    - version: 1.0.0
+#      description: "git commit message"
+#      type: "service bundle"
+#      url: "https://somerepo-or-github-releases.com"
+#    - version: 1.0.1
+#      description: "git commit message"
+#      type: "service bundle"
+#      url: "https://somerepo-or-github-releases.com"
+#    module1-env:
+#    - version: 1.0.0
+#      description: "git commit message"
+#      type: "environment bundle"
+#      url: "https://somerepo-or-github-releases.com"
+#    module2:
+#    - version: 1.0.1
+#      description: "git commit message"
+#      type: "service bundle"
+#      url: "https://somerepo-or-github-releases.com"

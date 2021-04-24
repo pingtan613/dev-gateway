@@ -1,0 +1,82 @@
+/*
+ * Copyright (c) 2018 CA. All rights reserved.
+ * This software may be modified and distributed under the terms
+ * of the MIT license.  See the LICENSE file for details.
+ */
+
+buildscript {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath "com.ca.apim.gateway:gateway-policy-plugin:1.0.4"
+        classpath "com.ca.apim.gateway:gateway-export-plugin:1.0.4"
+        classpath "com.ca.apim.gateway:gateway-import-plugin:1.0.4"
+    }
+
+}
+    task getExclusions << {
+        println "private-keys"
+    }
+
+subprojects {
+    apply plugin: "com.ca.apim.gateway.gateway-policy-plugin"
+    apply plugin: "com.ca.apim.gateway.gateway-export-plugin"
+    apply plugin: "com.ca.apim.gateway.gateway-import-plugin"
+    apply plugin: 'java'
+
+    task getCurrentVersion << {
+        println "$project.version"
+    }
+
+    task getSubProjects << {
+        println "$project.name"
+    }
+
+    task getProjectType << {
+        println "$type"
+    }
+
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        jcenter()
+    }
+
+    group "com.brcmlabs"
+    version = "1.0.0"
+
+    GatewayImportConfig {
+    bundles = files("./build/gateway/bundle/" + project.name + "-" + project.version + ".install.bundle")
+    }
+
+    GatewayImportConnection {
+    // pick the chosen environment type, or if null use test by default
+    def environmentType = project.parent.properties['environmentType'] ?: 'test'
+    url = project.parent.properties['gatewayURL'] 
+    userName = project.parent.properties['gatewayUsername']
+    userPass = project.parent.properties['gatewayPassword']
+}
+
+    GatewayConnection {
+    // pick the chosen environment type, or if null use test by default
+    def environmentType = project.parent.properties['environmentType'] ?: 'test'
+    url = project.parent.properties['gatewayURL']
+    userName = project.parent.properties['gatewayUsername']
+    userPass = project.parent.properties['gatewayPassword']
+}
+
+    repositories {
+        mavenLocal()
+        jcenter()
+        flatDir {
+            dirs new File(project.parent.rootDir, "lib")
+        }
+    }
+}
+
+wrapper {
+    gradleVersion = '4.10.2'
+}

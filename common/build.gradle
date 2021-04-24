@@ -1,0 +1,38 @@
+buildscript {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath "com.ca.apim.gateway:config-builder:1.0.3"
+        classpath "com.ca.apim.gateway:environment-creator-application:1.0.3"
+        classpath "com.ca.apim.gateway:gateway-policy-plugin:1.0.3"
+        classpath "com.ca.apim.gateway:gateway-export-plugin:1.0.3"
+    }
+}
+
+apply plugin: 'com.ca.apim.gateway.gateway-export-plugin'
+apply plugin: 'com.ca.apim.gateway.gateway-policy-plugin'
+group = "com.brcmlabs"
+version = '1.0.0'
+repositories {
+    gradlePluginPortal()
+    mavenCentral()
+    jcenter()
+}
+
+project.ext.set("type", "environment")
+
+EnvironmentConfig{
+    name="env"
+    map=[
+    "PASSWORD": file("./src/main/gateway/config/stored-passwords.properties"),
+    "LISTEN_PORT": file("./src/main/gateway/config/listen-ports.yml"),
+    "JDBC_CONNECTION": file("./src/main/gateway/config/jdbc-connections.yml")
+    ]
+}
+
+GatewayImportConfig {
+  bundles = files("./build/gateway/bundle/" + project.name + "-environment-" + project.version + "-env.install.bundle")
+}
